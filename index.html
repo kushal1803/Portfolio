@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kushal Patel — Product Builder</title>
+<meta name="description" content="Kushal Patel — Product Enthusiast & Early-Stage Builder. Taking products and businesses from 0→1.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Cormorant+Garamond:ital,wght@1,400;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #111111;
+    --paper: #fdfcf8;
+    --cream: #fcfaf2;
+    --warm-1: #fff8e6;
+    --warm-2: #ffe9b8;
+    --warm-3: #ffe1a0;
+    --accent: #f5a623;
+    --muted: #6b675e;
+    --card: #ffffff;
+    --line: rgba(17,17,17,0.10);
+    --serif: 'Cormorant Garamond', Georgia, serif;
+    --sans: 'Archivo', 'Inter', -apple-system, sans-serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: initial; }
+  body {
+    font-family: var(--sans);
+    background: var(--paper);
+    color: var(--ink);
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection { background: var(--accent); color: #111; }
+
+  /* ---------- NAV ---------- */
+  .nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 22px 48px;
+    transition: background .35s ease, box-shadow .35s ease, padding .35s ease;
+  }
+  .nav.scrolled {
+    background: rgba(253,252,248,0.88);
+    backdrop-filter: blur(14px);
+    box-shadow: 0 1px 0 var(--line);
+    padding: 14px 48px;
+  }
+  .nav-logo {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 500;
+    font-size: 28px;
+    letter-spacing: -0.02em;
+    text-decoration: none;
+    color: var(--ink);
+  }
+  .nav-links { display: flex; gap: 34px; align-items: center; }
+  .nav-links a {
+    text-decoration: none;
+    color: var(--ink);
+    font-size: 14.5px;
+    font-weight: 500;
+    position: relative;
+  }
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    left: 0; bottom: -4px;
+    width: 0; height: 1.5px;
+    background: var(--ink);
+    transition: width .25s ease;
+  }
+  .nav-links a:hover::after { width: 100%; }
+  .nav-cta {
+    background: var(--ink);
+    color: #fff !important;
+    padding: 13px 30px;
+    border-radius: 999px;
+    transition: transform .2s ease, background .2s ease;
+  }
+  .nav-cta::after { display: none; }
+  .nav-cta:hover { background: #333; transform: translateY(-1px); }
+  .nav-cta:hover::after { width: 0; }
+  .nav-burger { display: none; background: none; border: none; cursor: pointer; padding: 8px; }
+  .nav-burger span { display: block; width: 24px; height: 2px; background: var(--ink); margin: 5px 0; transition: .3s; }
+
+  /* ---------- HERO ---------- */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    overflow: hidden;
+    background:
+      radial-gradient(120% 90% at 50% 108%, rgba(255,196,66,0.55) 0%, rgba(255,224,158,0.45) 38%, rgba(255,244,220,0.25) 68%, rgba(253,252,248,0) 100%),
+      linear-gradient(180deg, var(--paper) 0%, var(--warm-1) 55%, var(--warm-2) 100%);
+  }
+  .hero-inner {
+    position: relative;
+    width: 100%;
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 48px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .hero-greeting {
+    position: absolute;
+    top: 26%;
+    left: 0; right: 0;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 4vw;
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(60px, 10.5vw, 165px);
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+    color: var(--ink);
+    z-index: 1;
+    pointer-events: none;
+  }
+  .hero-greeting .g-left { margin-right: auto; }
+  .hero-greeting .g-right { margin-left: auto; }
+  .hero-photo {
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%);
+    height: 82vh;
+    max-height: 900px;
+    z-index: 2;
+    filter: drop-shadow(0 24px 60px rgba(120,80,0,0.14));
+  }
+  .hero-badge {
+    position: absolute;
+    left: 48px;
+    top: 46%;
+    z-index: 3;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 13px 22px;
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: 0 8px 24px rgba(120,80,0,0.08);
+  }
+  .hero-badge .dot {
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    background: var(--accent);
+    animation: pulse 1.8s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(245,166,35,0.5); }
+    50% { box-shadow: 0 0 0 7px rgba(245,166,35,0); }
+  }
+  .hero-side {
+    position: absolute;
+    right: 48px;
+    top: 55%;
+    z-index: 3;
+    max-width: 240px;
+    font-size: 15px;
+    line-height: 1.55;
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .hero-bottom {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding-bottom: 44px;
+    margin-top: auto;
+  }
+  .hero-name {
+    font-weight: 900;
+    font-size: clamp(56px, 8.5vw, 128px);
+    line-height: 0.92;
+    letter-spacing: -0.03em;
+    text-transform: uppercase;
+    max-width: 7em;
+  }
+  .hero-role {
+    font-weight: 800;
+    font-size: clamp(22px, 2.6vw, 40px);
+    line-height: 1.08;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+    text-align: left;
+    max-width: 320px;
+    padding-bottom: 8px;
+  }
+  .hero-scroll {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 3;
+    font-size: 12px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  .hero-scroll .line {
+    width: 1px; height: 34px;
+    background: linear-gradient(var(--ink), transparent);
+    animation: drip 1.6s ease-in-out infinite;
+  }
+  @keyframes drip { 0% { transform: scaleY(0); transform-origin: top; } 50% { transform: scaleY(1); transform-origin: top; } 51% { transform-origin: bottom; } 100% { transform: scaleY(0); transform-origin: bottom; } }
+
+  /* ---------- MARQUEE ---------- */
+  .marquee {
+    background: var(--ink);
+    color: var(--cream);
+    overflow: hidden;
+    padding: 18px 0;
+    white-space: nowrap;
+  }
+  .marquee-track {
+    display: inline-flex;
+    gap: 56px;
+    animation: scroll-x 26s linear infinite;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+  .marquee-track span { display: inline-flex; align-items: center; gap: 56px; }
+  .marquee-track .star { color: var(--accent); }
+  @keyframes scroll-x { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+  /* ---------- SECTION SHELL ---------- */
+  section { padding: 110px 48px; }
+  .container { max-width: 1280px; margin: 0 auto; }
+  .sec-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 26px;
+  }
+  .sec-label::before { content: ''; width: 34px; height: 2px; background: var(--accent); }
+  .sec-title {
+    font-weight: 800;
+    font-size: clamp(38px, 5vw, 72px);
+    line-height: 1.02;
+    letter-spacing: -0.025em;
+    text-transform: uppercase;
+  }
+  .sec-title em {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: 0;
+  }
+
+  /* ---------- ABOUT ---------- */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 80px;
+    align-items: start;
+  }
+  .about-lede {
+    font-size: clamp(22px, 2.4vw, 32px);
+    line-height: 1.35;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+  .about-lede strong { font-weight: 700; }
+  .about-body { color: var(--muted); font-size: 16.5px; line-height: 1.75; margin-top: 28px; max-width: 560px; }
+  .stat-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  .stat {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    padding: 30px 26px;
+    transition: transform .25s ease, box-shadow .25s ease;
+  }
+  .stat:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(120,80,0,0.10); }
+  .stat .num {
+    font-weight: 900;
+    font-size: clamp(34px, 3.4vw, 52px);
+    letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+  .stat .num sup { font-size: 0.5em; font-weight: 700; }
+  .stat .lbl { margin-top: 8px; font-size: 13.5px; color: var(--muted); font-weight: 500; line-height: 1.45; }
+
+  /* ---------- WORKS ---------- */
+  .works { background: var(--cream); }
+  .work-list { margin-top: 56px; border-top: 1px solid var(--line); }
+  .work-item {
+    display: grid;
+    grid-template-columns: 90px 1.2fr 1.6fr auto;
+    gap: 32px;
+    align-items: center;
+    padding: 38px 8px;
+    border-bottom: 1px solid var(--line);
+    text-decoration: none;
+    color: var(--ink);
+    position: relative;
+    transition: background .25s ease, padding-left .25s ease;
+  }
+  .work-item:hover { background: #fff; padding-left: 22px; }
+  .work-idx { font-family: var(--serif); font-style: italic; font-size: 26px; color: var(--muted); }
+  .work-name { font-weight: 800; font-size: clamp(24px, 3vw, 40px); letter-spacing: -0.02em; text-transform: uppercase; }
+  .work-desc { color: var(--muted); font-size: 15.5px; line-height: 1.6; max-width: 560px; }
+  .work-tag {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    background: var(--warm-1);
+    border: 1px solid var(--warm-2);
+    color: #8a6a1f;
+    padding: 8px 16px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+  .work-arrow { position: absolute; right: 18px; top: 50%; transform: translateY(-50%) translateX(-8px); opacity: 0; transition: .25s ease; font-size: 22px; }
+  .work-item:hover .work-arrow { opacity: 1; transform: translateY(-50%) translateX(0); }
+
+  /* ---------- EXPERIENCE ---------- */
+  .xp-wrap { margin-top: 60px; position: relative; }
+  .xp-item {
+    display: grid;
+    grid-template-columns: 220px 44px 1fr;
+    gap: 28px;
+    padding: 34px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .xp-item:last-child { border-bottom: none; }
+  .xp-when { font-size: 14px; color: var(--muted); font-weight: 600; padding-top: 6px; }
+  .xp-when small { display: block; font-weight: 500; margin-top: 4px; color: #9b968a; }
+  .xp-rail { position: relative; }
+  .xp-rail::before {
+    content: '';
+    position: absolute;
+    left: 50%; top: 10px; bottom: -34px;
+    width: 1.5px;
+    background: var(--line);
+  }
+  .xp-item:last-child .xp-rail::before { display: none; }
+  .xp-dot {
+    position: absolute;
+    left: 50%; top: 6px;
+    transform: translateX(-50%);
+    width: 13px; height: 13px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 3px solid var(--paper);
+    box-shadow: 0 0 0 1.5px var(--accent);
+  }
+  .xp-role { font-weight: 800; font-size: 22px; letter-spacing: -0.01em; }
+  .xp-org { font-size: 15px; font-weight: 600; color: var(--accent); margin-top: 3px; }
+  .xp-points { margin-top: 14px; list-style: none; }
+  .xp-points li {
+    position: relative;
+    padding-left: 22px;
+    color: var(--muted);
+    font-size: 15.5px;
+    line-height: 1.65;
+    margin-bottom: 8px;
+  }
+  .xp-points li::before { content: '—'; position: absolute; left: 0; color: var(--accent); font-weight: 700; }
+  .xp-points strong, .work-desc strong, .about-body strong { color: var(--ink); font-weight: 700; }
+
+  /* ---------- SERVICES ---------- */
+  .services { background: var(--ink); color: var(--cream); }
+  .services .sec-label { color: #9b968a; }
+  .svc-grid { margin-top: 56px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+  .svc {
+    border: 1px solid rgba(253,252,248,0.14);
+    border-radius: 22px;
+    padding: 38px 34px;
+    transition: background .25s ease, transform .25s ease, border-color .25s ease;
+  }
+  .svc:hover { background: rgba(255,255,255,0.05); border-color: rgba(245,166,35,0.5); transform: translateY(-4px); }
+  .svc-num { font-family: var(--serif); font-style: italic; font-size: 22px; color: var(--accent); }
+  .svc h3 { margin-top: 16px; font-size: 24px; font-weight: 800; letter-spacing: -0.01em; }
+  .svc p { margin-top: 12px; color: #b5b0a4; font-size: 15px; line-height: 1.7; }
+
+  /* ---------- CONTACT ---------- */
+  .contact {
+    background:
+      radial-gradient(110% 100% at 50% 115%, rgba(255,196,66,0.5) 0%, rgba(255,229,166,0.35) 45%, rgba(253,252,248,0) 100%),
+      var(--paper);
+    text-align: center;
+  }
+  .contact-hello {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: clamp(40px, 6vw, 88px);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+  }
+  .contact-title {
+    font-weight: 900;
+    font-size: clamp(44px, 7vw, 110px);
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    text-transform: uppercase;
+    margin-top: 8px;
+  }
+  .contact-cta {
+    display: inline-block;
+    margin-top: 44px;
+    background: var(--ink);
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 16px;
+    padding: 20px 46px;
+    border-radius: 999px;
+    transition: transform .2s ease, background .2s ease, box-shadow .2s ease;
+    box-shadow: 0 12px 30px rgba(17,17,17,0.18);
+  }
+  .contact-cta:hover { transform: translateY(-3px); background: #2a2a2a; }
+  .contact-links { margin-top: 36px; display: flex; gap: 28px; justify-content: center; font-size: 14.5px; }
+  .contact-links a { color: var(--muted); text-decoration: none; border-bottom: 1px solid var(--line); padding-bottom: 2px; transition: color .2s, border-color .2s; }
+  .contact-links a:hover { color: var(--ink); border-color: var(--ink); }
+
+  /* ---------- FOOTER ---------- */
+  footer {
+    padding: 26px 48px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    color: var(--muted);
+    background: var(--paper);
+  }
+  footer .f-logo { font-family: var(--serif); font-style: italic; font-size: 18px; color: var(--ink); }
+
+  /* ---------- REVEAL ---------- */
+  .reveal { opacity: 0; transform: translateY(36px); }
+  .reveal.in { opacity: 1; transform: translateY(0); transition: opacity .8s cubic-bezier(.2,.65,.3,1), transform .8s cubic-bezier(.2,.65,.3,1); }
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width: 1024px) {
+    .about-grid { grid-template-columns: 1fr; gap: 48px; }
+    .work-item { grid-template-columns: 50px 1fr auto; }
+    .work-desc { grid-column: 2 / -1; grid-row: 2; }
+    .xp-item { grid-template-columns: 150px 34px 1fr; gap: 18px; }
+    .svc-grid { grid-template-columns: 1fr; }
+    .hero-side { display: none; }
+    .hero-badge { top: auto; bottom: 34%; }
+  }
+  @media (max-width: 768px) {
+    .nav { padding: 18px 22px; }
+    .nav.scrolled { padding: 12px 22px; }
+    .nav-links {
+      position: fixed;
+      inset: 0;
+      background: var(--paper);
+      flex-direction: column;
+      justify-content: center;
+      gap: 30px;
+      font-size: 22px;
+      transform: translateY(-100%);
+      transition: transform .35s ease;
+      z-index: -1;
+    }
+    .nav-links.open { transform: translateY(0); }
+    .nav-burger { display: block; z-index: 2; }
+    section { padding: 76px 22px; }
+    .hero-inner { padding: 0 22px; }
+    .hero-photo { height: 56vh; }
+    .hero::after {
+      content: '';
+      position: absolute;
+      left: 0; right: 0; bottom: 0;
+      height: 46%;
+      background: linear-gradient(180deg, rgba(255,233,184,0) 0%, rgba(255,229,166,0.92) 34%, var(--warm-2) 100%);
+      z-index: 2;
+      pointer-events: none;
+    }
+    .hero-greeting { top: 15%; font-size: 15vw; }
+    .hero-badge { left: 22px; top: 30%; bottom: auto; height: auto; align-items: center; }
+    .hero-badge .dot { flex: 0 0 auto; }
+    .hero-bottom { flex-direction: column; align-items: flex-start; gap: 16px; padding-bottom: 30px; }
+    .hero-role { max-width: none; font-size: 26px; }
+    .hero-scroll { display: none; }
+    .work-item { grid-template-columns: 1fr; gap: 10px; }
+    .work-desc { grid-column: auto; grid-row: auto; }
+    .work-tag { justify-self: start; }
+    .work-arrow { display: none; }
+    .xp-item { grid-template-columns: 1fr; gap: 6px; }
+    .xp-rail { display: none; }
+    .xp-when { padding-top: 0; }
+    footer { flex-direction: column; gap: 10px; padding: 22px; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav" id="nav">
+  <a class="nav-logo" href="#top">Kushal.</a>
+  <div class="nav-links" id="navLinks">
+    <a href="#works">Works</a>
+    <a href="#about">About</a>
+    <a href="#experience">Experience</a>
+    <a href="#services">Services</a>
+    <a class="nav-cta" href="mailto:kushalpatel1803@gmail.com">Contact</a>
+  </div>
+  <button class="nav-burger" id="burger" aria-label="Menu"><span></span><span></span><span></span></button>
+</nav>
+
+<!-- ============ HERO ============ -->
+<header class="hero" id="top">
+  <div class="hero-inner">
+    <h1 class="hero-greeting" id="greeting"><span class="g-left">Hey,</span><span class="g-right">there</span></h1>
+    <img class="hero-photo" id="heroPhoto" src="assets/kushal-cutout.png" alt="Kushal Patel">
+    <div class="hero-badge" id="heroBadge"><span class="dot"></span>Available for new opportunities</div>
+    <p class="hero-side" id="heroSide">Specialized in Product Management, 0→1 Building, AI Workflows &amp; Operations.</p>
+    <div class="hero-bottom">
+      <div class="hero-name" id="heroName">I Am<br>Kushal Patel</div>
+      <div class="hero-role" id="heroRole">Product Lead &amp;<br>Early-Stage<br>Builder</div>
+    </div>
+  </div>
+  <div class="hero-scroll">Scroll<span class="line"></span></div>
+</header>
+
+<!-- ============ MARQUEE ============ -->
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track" id="marqueeTrack">
+    <span>Product Strategy <i class="star">✦</i> 0→1 Builder <i class="star">✦</i> AI Workflows <i class="star">✦</i> EdTech <i class="star">✦</i> Operations <i class="star">✦</i> Growth <i class="star">✦</i></span>
+    <span>Product Strategy <i class="star">✦</i> 0→1 Builder <i class="star">✦</i> AI Workflows <i class="star">✦</i> EdTech <i class="star">✦</i> Operations <i class="star">✦</i> Growth <i class="star">✦</i></span>
+  </div>
+</div>
+
+<!-- ============ ABOUT ============ -->
+<section id="about">
+  <div class="container">
+    <div class="sec-label reveal">About</div>
+    <div class="about-grid">
+      <div class="reveal">
+        <p class="about-lede">Product enthusiast &amp; early-stage builder who takes products and businesses from <strong>zero to one</strong> — across product management, operations, and AI.</p>
+        <p class="about-body">I've built products from scratch and worn every hat an early stage demands. At <strong>PREPZUE</strong>, I lead an AI-powered test-prep platform — coordinating a 6-person team and designing a multi-LLM question pipeline. Before that, I founded and ran <strong>Pricasa</strong>, a home-décor business, end to end: sourcing, pricing, fulfilment, sales — and made the hard call to shut it down when the economics didn't work. That's the job: turn ideas into shipped products and measurable outcomes.</p>
+      </div>
+      <div class="stat-grid">
+        <div class="stat reveal"><div class="num" data-count="20000" data-suffix="+">0</div><div class="lbl">questions database built at PREPZUE</div></div>
+        <div class="stat reveal"><div class="num" data-count="800" data-suffix="+">0</div><div class="lbl">AI-generated questions via multi-LLM pipeline</div></div>
+        <div class="stat reveal"><div class="num" data-count="150" data-suffix="+">0</div><div class="lbl">registered users reached through growth initiatives</div></div>
+        <div class="stat reveal"><div class="num" data-count="50" data-suffix="+">0</div><div class="lbl">hours/month saved with an automated salary workflow</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ WORKS ============ -->
+<section class="works" id="works">
+  <div class="container">
+    <div class="sec-label reveal">Selected Works</div>
+    <h2 class="sec-title reveal">Things I've <em>built</em> &amp; shipped</h2>
+    <div class="work-list">
+      <a class="work-item reveal" href="#experience">
+        <div class="work-idx">01</div>
+        <div class="work-name">Prepzue</div>
+        <div class="work-desc">AI-powered CAT/JEE/NEET prep platform — idea to launch with a <strong>20,000+ question</strong> database, multi-LLM generation pipeline, and early traction across SEO, Instagram &amp; podcasts.</div>
+        <div class="work-tag">Product Lead</div>
+        <span class="work-arrow">→</span>
+      </a>
+      <a class="work-item reveal" href="#experience">
+        <div class="work-idx">02</div>
+        <div class="work-name">Pricasa</div>
+        <div class="work-desc">Home décor &amp; bathroom essentials brand built from <strong>0→1</strong> — 10–12 suppliers, 100+ units sold across exhibitions, 30–40 online orders/month at peak.</div>
+        <div class="work-tag">Founder</div>
+        <span class="work-arrow">→</span>
+      </a>
+      <a class="work-item reveal" href="#experience">
+        <div class="work-idx">03</div>
+        <div class="work-name">AI Course Launch</div>
+        <div class="work-desc">Took an AI-focused course from concept to rollout with academic &amp; content teams at Class Monitor — contributing <strong>5%+ to monthly revenue</strong>.</div>
+        <div class="work-tag">Product Coordinator</div>
+        <span class="work-arrow">→</span>
+      </a>
+      <a class="work-item reveal" href="#experience">
+        <div class="work-idx">04</div>
+        <div class="work-name">Salary Automation</div>
+        <div class="work-desc">Automated teacher salary workflow consolidating hours, payouts &amp; monthly data — saving <strong>50+ hours of manual work every month</strong>.</div>
+        <div class="work-tag">Ops &amp; Automation</div>
+        <span class="work-arrow">→</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ EXPERIENCE ============ -->
+<section id="experience">
+  <div class="container">
+    <div class="sec-label reveal">Experience</div>
+    <h2 class="sec-title reveal">Where I've <em>worked</em></h2>
+    <div class="xp-wrap">
+      <div class="xp-item reveal">
+        <div class="xp-when">Apr 2026 – Present<small>Side Project</small></div>
+        <div class="xp-rail"><div class="xp-dot"></div></div>
+        <div>
+          <div class="xp-role">Product Lead</div>
+          <div class="xp-org">PREPZUE</div>
+          <ul class="xp-points">
+            <li>Built an AI-powered CAT/JEE/NEET prep platform from idea to launch with a <strong>20,000+ question</strong> database.</li>
+            <li>Coordinated a <strong>6-person team</strong> across product, engineering, marketing, AI workflows, and testing.</li>
+            <li>Designed a multi-LLM pipeline (Gemini, DeepSeek, Gemma, Kimi) that generated <strong>800+ questions</strong> at near-zero infrastructure cost.</li>
+            <li>Reached <strong>150+ registered users</strong> and 8–10 DAUs through SEO, Instagram, and podcast initiatives.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="xp-item reveal">
+        <div class="xp-when">Jan 2026 – Jul 2026</div>
+        <div class="xp-rail"><div class="xp-dot"></div></div>
+        <div>
+          <div class="xp-role">Product Coordinator</div>
+          <div class="xp-org">Class Monitor</div>
+          <ul class="xp-points">
+            <li>Built an automated teacher salary workflow, saving <strong>50+ hours/month</strong> of manual work.</li>
+            <li>Launched an <strong>AI-focused course</strong> from concept to rollout, contributing <strong>5%+ to monthly revenue</strong>.</li>
+            <li>Managed live-class operations across teachers, schedules, and student issues.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="xp-item reveal">
+        <div class="xp-when">Oct 2024 – Dec 2025</div>
+        <div class="xp-rail"><div class="xp-dot"></div></div>
+        <div>
+          <div class="xp-role">Founder</div>
+          <div class="xp-org">PRICASA</div>
+          <ul class="xp-points">
+            <li>Built a home décor business from <strong>0→1</strong> — sourcing, pricing, inventory, fulfilment, and sales across <strong>10–12 suppliers</strong>.</li>
+            <li>Sold <strong>100+ units</strong> through 5–6 exhibitions and retail activations; 30–40 online orders/month.</li>
+            <li>Identified a 40% breakage rate across supplier handling, and shut down deliberately when the economics didn't hold.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="xp-item reveal">
+        <div class="xp-when">Apr 2024 – Oct 2024</div>
+        <div class="xp-rail"><div class="xp-dot"></div></div>
+        <div>
+          <div class="xp-role">Product Intern</div>
+          <div class="xp-org">GetFreshGo</div>
+          <ul class="xp-points">
+            <li>Worked across product, finance, marketing, vendor management &amp; fulfilment for a hyperlocal delivery startup — <strong>50 orders/day</strong> across <strong>15 vendor partners</strong>.</li>
+            <li>Ran a vendor pilot using delivery reliability data to support onboarding a replacement supplier.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="xp-item reveal">
+        <div class="xp-when">Dec 2023 – Apr 2024</div>
+        <div class="xp-rail"><div class="xp-dot"></div></div>
+        <div>
+          <div class="xp-role">Business Development Executive</div>
+          <div class="xp-org">MoreYeahs</div>
+          <ul class="xp-points">
+            <li>Spoke with clients to capture requirements and coordinated with the technology team on what to build and deliver.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="xp-item reveal">
+        <div class="xp-when">May 2023 – Aug 2023</div>
+        <div class="xp-rail"><div class="xp-dot"></div></div>
+        <div>
+          <div class="xp-role">Program Intern</div>
+          <div class="xp-org">Ishaan Foundation</div>
+          <ul class="xp-points">
+            <li>Coordinated field teams and volunteers for education-focused NGO outreach programs.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SERVICES ============ -->
+<section class="services" id="services">
+  <div class="container">
+    <div class="sec-label reveal">Services</div>
+    <h2 class="sec-title reveal">What I <em>bring</em> to the table</h2>
+    <div class="svc-grid">
+      <div class="svc reveal">
+        <div class="svc-num">01</div>
+        <h3>Product Management</h3>
+        <p>From discovery to launch — roadmaps, prioritization, user feedback loops, and shipping measurable outcomes at early-stage speed.</p>
+      </div>
+      <div class="svc reveal">
+        <div class="svc-num">02</div>
+        <h3>0→1 Building</h3>
+        <p>Taking ideas to launched products: validation, MVP scoping, go-to-market, and the operational grit in between — proven across EdTech and D2C.</p>
+      </div>
+      <div class="svc reveal">
+        <div class="svc-num">03</div>
+        <h3>AI Product &amp; Workflows</h3>
+        <p>Designing AI-native product features and multi-LLM pipelines (Gemini, DeepSeek, Gemma, Kimi) with cost-efficient infrastructure.</p>
+      </div>
+      <div class="svc reveal">
+        <div class="svc-num">04</div>
+        <h3>Operations &amp; Growth</h3>
+        <p>Vendor management, fulfilment, process automation, and early growth — SEO, social, and partnerships that move real numbers.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONTACT ============ -->
+<section class="contact" id="contact">
+  <div class="container">
+    <div class="contact-hello reveal">Let's build something</div>
+    <h2 class="contact-title reveal">Together.</h2>
+    <a class="contact-cta reveal" href="mailto:kushalpatel1803@gmail.com">kushalpatel1803@gmail.com</a>
+    <div class="contact-links reveal">
+      <a href="tel:+919925350820">+91 99253 50820</a>
+      <a href="mailto:kushalpatel1803@gmail.com">Email</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="f-logo">Kushal.</div>
+  <div>© 2026 Kushal Patel — Product Lead &amp; Early-Stage Builder</div>
+  <div>Gwalior, India · Open to opportunities</div>
+</footer>
+
+<script src="vendor/gsap.min.js"></script>
+<script src="vendor/ScrollTrigger.min.js"></script>
+<script src="vendor/lenis.min.js"></script>
+<script>
+  // ---- Smooth scroll (Lenis) ----
+  const lenis = new Lenis({ lerp: 0.09, wheelMultiplier: 1 });
+  lenis.on('scroll', () => { ScrollTrigger.update(); });
+  gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+  gsap.ticker.lagSmoothing(0);
+
+  // Anchor links through Lenis
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', (e) => {
+      const target = document.querySelector(a.getAttribute('href'));
+      if (!target) return;
+      e.preventDefault();
+      lenis.scrollTo(target, { offset: -70 });
+      navLinks.classList.remove('open');
+    });
+  });
+
+  // ---- Nav scrolled state ----
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 40);
+  }, { passive: true });
+
+  // ---- Mobile menu ----
+  const burger = document.getElementById('burger');
+  const navLinks = document.getElementById('navLinks');
+  burger.addEventListener('click', () => navLinks.classList.toggle('open'));
+
+  // ---- Hero entrance ----
+  const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+  tl.from('#greeting', { y: 60, opacity: 0, duration: 1.1 }, 0.15)
+    .from('#heroPhoto', { y: 120, opacity: 0, duration: 1.2 }, 0.25)
+    .from('#heroName', { y: 60, opacity: 0, duration: 0.9 }, 0.55)
+    .from('#heroRole', { y: 40, opacity: 0, duration: 0.9 }, 0.7)
+    .from('#heroBadge', { x: -30, opacity: 0, duration: 0.8 }, 0.85)
+    .from('#heroSide', { x: 30, opacity: 0, duration: 0.8 }, 0.9)
+    .from('#nav', { y: -30, opacity: 0, duration: 0.8 }, 0.4);
+
+  // Hero parallax on scroll
+  gsap.to('#heroPhoto', {
+    yPercent: 12, ease: 'none',
+    scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true }
+  });
+  gsap.to('#greeting', {
+    yPercent: -30, ease: 'none',
+    scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true }
+  });
+
+  // ---- Scroll reveals ----
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(en => {
+      if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  // ---- Stat counters ----
+  document.querySelectorAll('[data-count]').forEach(el => {
+    const end = +el.dataset.count, suffix = el.dataset.suffix || '';
+    const fmt = (n) => n >= 1000 ? n.toLocaleString('en-US') : String(n);
+    ScrollTrigger.create({
+      trigger: el, start: 'top 88%', once: true,
+      onEnter: () => {
+        gsap.to({ v: 0 }, {
+          v: end, duration: 1.8, ease: 'power2.out',
+          onUpdate: function () { el.innerHTML = fmt(Math.round(this.targets()[0].v)) + `<sup>${suffix}</sup>`; }
+        });
+      }
+    });
+  });
+
+  // ---- Section titles: subtle rise (IO-driven, same as .reveal) ----
+  document.querySelectorAll('.sec-title').forEach(t => {
+    t.classList.add('reveal');
+    io.observe(t);
+  });
+</script>
+</body>
+</html>
